@@ -41,6 +41,7 @@ class IndiClient(PyIndi.BaseClient):
     def serverDisconnected(self, code):
         pass
 
+# Mkhrs takes a time float number in and returns a formatted string as HH:MM:SS
 def mkhrs(time):
   hours = int(time)
   minutes = (time*60) % 60
@@ -48,9 +49,21 @@ def mkhrs(time):
   outstring = "%d:%02d:%02d" % (hours, minutes, seconds)
   return outstring
 
+# nextObject reads a line from a tour.txt file and slews the telescope to that object
+def prevObject():
+    # to come
+    return
+    
+# nextObject reads a line from a tour.txt file and slews the telescope to that object
+def nextObject():
+    # to come
+    return
+
 # Set up tkinter
 root=tk.Tk()
-# root.wm_attributes('-fullscreen','true')
+root.configure(background='black')
+# Uncomment this line to get fullscreen (a pain when debugging on a PC!)
+#root.wm_attributes('-fullscreen','true')
 
 # Set up INDI
 monitored="Telescope Simulator"
@@ -100,33 +113,42 @@ tk.Grid.rowconfigure(root, 6, weight=1)
 
 # Top row
 currDateText = tk.Label(root, text="", anchor="w") 
-currDateText.configure(font='helvetica 12')
+currDateText.configure(font='helvetica 12', fg='white', bg='black')
 currDateText.grid(row=0, column=0, sticky="nsew")
 currTimeText = tk.Label(root, text="", anchor="w") 
-currTimeText.configure(font='helvetica 12')
+currTimeText.configure(font='helvetica 12', fg='white', bg='black')
 currTimeText.grid(row=1, column=0, sticky="nsew")
+currStatusText = tk.Label(root, text="", anchor="e") 
+currStatusText.configure(font='helvetica 12', fg='white', bg='black')
+currStatusText.grid(row=0, column=3, sticky="nsew")
 
 # Middle Rows
 currObjText = tk.Label(root, text="") 
-currObjText.configure(font='helvetica 24')
-currObjText.grid(row=3, column=0, columnspan=4, sticky="nsew")
+currObjText.configure(font='helvetica 24', fg='white', bg='black')
+currObjText.grid(row=2, column=0, columnspan=4, sticky="nsew")
 currRAText = tk.Label(root, text="") 
-currRAText.configure(font='helvetica 24')
-currRAText.grid(row=4, column=0, columnspan=4, sticky="nsew")
+currRAText.configure(font='helvetica 24', fg='white', bg='black')
+currRAText.grid(row=3, column=0, columnspan=4, sticky="nsew")
 currDECText = tk.Label(root, text="") 
-currDECText.configure(font='helvetica 24')
-currDECText.grid(row=5, column=0, columnspan=4,sticky="nsew")
+currDECText.configure(font='helvetica 24', fg='white', bg='black')
+currDECText.grid(row=4, column=0, columnspan=4,sticky="nsew")
+
+# Buttons
+nextButton=tk.Button(root, text="Next", command=nextObject(), fg='white', bg='black', padx=2, highlightbackground='white', highlightthickness=2, highlightcolor="black")
+nextButton.grid(row=6, column=1, sticky="nsew")
+nextButton=tk.Button(root, text="Prev", command=prevObject(), fg='white', bg='black', padx=2, highlightbackground='white', highlightthickness=2, highlightcolor="black")
+nextButton.grid(row=6, column=2, sticky="nsew")
 
 # Bottom Rows
 currUTDateText = tk.Label(root, text="", anchor="w") 
-currUTDateText.configure(font='helvetica 12')
+currUTDateText.configure(font='helvetica 12', fg='white', bg='black')
 currUTDateText.grid(row=7, column=0, sticky="nsew")
 currUTTimeText = tk.Label(root, text="", anchor="w") 
-currUTTimeText.configure(font='helvetica 12')
+currUTTimeText.configure(font='helvetica 12', fg='white', bg='black')
 currUTTimeText.grid(row=8, column=0, sticky="nsew")
-currIPtext = tk.Label(root, text=IP, anchor="e") 
-currIPText.configure(font='helvetica 12')
-currIPtext.grid(row=8, column=3, sticky="nsew")
+currIPText = tk.Label(root, text=IP, anchor="e") 
+currIPText.configure(font='helvetica 12', fg='white', bg='black')
+currIPText.grid(row=8, column=3, sticky="nsew")
 
 # ************************ MAINLINE **************************
 utc = pytz.utc
@@ -151,6 +173,9 @@ while (1):
         currUTTimeText.configure(text=dateTimeObj.strftime("%H:%M:%S")+" UT")
         currRAText.configure(text="RA: "+mkhrs(currRA))
         currDECText.configure(text="DEC: "+str(currDEC))
+        currStatusText.configure(text="TRACKING")
         root.update_idletasks()
         root.update()
         newval=False
+
+
